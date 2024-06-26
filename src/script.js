@@ -15,16 +15,74 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+// Floor
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 20),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 })
+)
+// floor.position.y = -0.5
+floor.rotation.x = -Math.PI * 0.5
+scene.add(floor)
+
 /**
  * House
  */
-// Temporary sphere
-const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial({ roughness: 0.7 })
-)
-scene.add(sphere)
+const house = new THREE.Group()
+scene.add(house)
 
+// Walls
+const walls = new THREE.Mesh(
+    new THREE.BoxGeometry(4, 2.5, 4),
+    new THREE.MeshStandardMaterial()
+)
+walls.position.y += 2.5 / 2
+house.add(walls)
+
+// Roof
+const roof = new THREE.Mesh(
+    new THREE.ConeGeometry(4, 2.5, 4),
+    new THREE.MeshStandardMaterial()
+)
+roof.position.y += 3.5
+roof.rotation.y = Math.PI * 1.25
+
+house.add(roof)
+
+// Door
+const door = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.2, 2.2),
+    new THREE.MeshStandardMaterial({color: 0xf55f, roughness: 0.5})
+)
+door.position.y += 1
+door.position.x += 2 + 0.01
+door.rotation.y = Math.PI * 0.5
+house.add(door)
+
+// Bushes
+const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
+const bushMaterial = new THREE.MeshStandardMaterial()
+
+const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush1.scale.set(0.5, 0.5, 0.5)
+bush1.position.set(.8, .2, 2.2)
+house.add(bush1)
+
+const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush2.scale.set(0.5, 0.5, 0.5)
+bush2.position.set(-.8, 0.2, 2.2)
+house.add(bush2)
+
+const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush3.scale.set(0.25, 0.25, 0.25)
+bush3.position.set(0, 0.2, 2.2)
+house.add(bush3)
+
+const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush4.scale.set(0.5, 0.5, 0.5)
+bush4.position.set(.8, 0.2, -2.4)
+house.add(bush4)
+
+ 
 /**
  * Lights
  */
