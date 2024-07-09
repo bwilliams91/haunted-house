@@ -15,16 +15,134 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+
+// Textures
+const textureLoader = new THREE.TextureLoader()
+
+// Floor
+const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg')
+
+// Floor
+const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 20),
+    new THREE.MeshStandardMaterial({ 
+        alphaMap : floorAlphaTexture, 
+        transparent: true,
+        opacity: 1,
+        depthwrite: false
+    })
+)
+// floor.position.y = -0.5
+floor.rotation.x = -Math.PI * 0.5
+scene.add(floor)
+
+
 /**
  * House
  */
-// Temporary sphere
-const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial({ roughness: 0.7 })
-)
-scene.add(sphere)
+const house = new THREE.Group()
+scene.add(house)
 
+// Walls
+const walls = new THREE.Mesh(
+    new THREE.BoxGeometry(4, 2.5, 4),
+    new THREE.MeshStandardMaterial()
+)
+walls.position.y += 2.5 / 2
+house.add(walls)
+
+// Roof
+const roof = new THREE.Mesh(
+    new THREE.ConeGeometry(4, 2.5, 4),
+    new THREE.MeshStandardMaterial()
+)
+roof.position.y += 3.5
+roof.rotation.y = Math.PI * 1.25
+
+house.add(roof)
+
+// Door
+const door = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.2, 2.2),
+    new THREE.MeshStandardMaterial({color: 0xf55f, roughness: 0.5})
+)
+door.position.y += 1
+door.position.x += 2 + 0.01
+door.rotation.y = Math.PI * 0.5
+house.add(door)
+
+// Bushes
+const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
+const bushMaterial = new THREE.MeshStandardMaterial()
+
+const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush1.scale.set(0.5, 0.5, 0.5)
+bush1.position.set(.8, .2, 2.2)
+
+
+const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush2.scale.set(0.5, 0.5, 0.5)
+bush2.position.set(-.8, 0.2, 2.2)
+
+
+const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush3.scale.set(0.25, 0.25, 0.25)
+bush3.position.set(0, 0.1, 2.2)
+
+
+const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush4.scale.set(0.5, 0.5, 0.5)
+bush4.position.set(.8, 0.2, -2.4)
+
+
+const bush5 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush5.scale.set(0.5, 0.5, 0.5)
+bush5.position.set(-2.25, 0.2, -1.2)
+
+const bush6 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush6.scale.set(0.5, 0.5, 0.5)
+bush6.position.set(-2.25, 0.2, 1.2)
+
+
+const bush7 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush7.scale.set(0.25, 0.25, 0.25)
+bush7.position.set(0, 0.1, -2.2)
+
+house.add(bush1, bush2, bush3, bush4, bush5, bush6, bush7)
+
+// GRAVES
+const gravesGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
+const gravesMaterial = new THREE.MeshStandardMaterial()
+
+const graves = new THREE.Group()
+scene.add(graves)
+
+for(let i = 0; i < 30; i++) 
+    {
+        const angle = Math.random() * Math.PI * 2
+        const radius = 4 + Math.random() * 4
+        const x = Math.sin(angle) * radius
+        const z = Math.cos(angle) * radius
+        // Mesh
+        const grave = new THREE.Mesh(gravesGeometry, gravesMaterial)
+        grave.rotation.y = Math.random() * Math.PI * 2
+        grave.rotation.z = (Math.random() - 0.5) * 0.4
+        grave.rotation.x = (Math.random() - 0.5) * 0.4
+        grave.position.y = Math.random() * 0.4
+        grave.position.x = x
+        grave.position.z = z
+
+        // Add graves to group
+        graves.add(grave)
+    }
+
+
+// GUI for bushes
+// gui.add(bush5.position, 'x', -3, 3, 0.01)
+// gui.add(bush5.position, 'y', -1, 1, 0.01)
+// gui.add(bush5.position, 'z', -4, 5, 0.01)
+
+ 
 /**
  * Lights
  */
