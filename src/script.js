@@ -43,6 +43,7 @@ floorNormalTexture.wrapT = THREE.RepeatWrapping
 floorDisplacementTexture.repeat.set(8, 8)
 floorDisplacementTexture.wrapS = THREE.RepeatWrapping
 floorDisplacementTexture.wrapT = THREE.RepeatWrapping
+
 // Wall Textures
 
 const wallARMTexture = textureLoader.load('./walls/wall_bricks_plaster_arm_1k.jpg')
@@ -61,19 +62,41 @@ const roofARMTexture = textureLoader.load('./roof/clay_roof_tiles_03_arm_1k.jpg'
 const roofNormalTexture = textureLoader.load('./roof/clay_roof_tiles_03_nor_gl_1k.jpg')
 const roofColorTexture = textureLoader.load('./roof/clay_roof_tiles_03_diff_1k.jpg')
 
-roofNormalTexture.repeat.set(4, 4)
+roofNormalTexture.repeat.set(3, 1)
 roofNormalTexture.wrapS = THREE.RepeatWrapping
-roofNormalTexture.wrapT = THREE.RepeatWrapping
+// roofNormalTexture.wrapT = THREE.RepeatWrapping
 
-roofColorTexture.repeat.set(4, 4)
+roofColorTexture.repeat.set(3, 1)
 roofColorTexture.wrapS = THREE.RepeatWrapping
-roofColorTexture.wrapT = THREE.RepeatWrapping
+// roofColorTexture.wrapT = THREE.RepeatWrapping
 
-roofARMTexture.repeat.set(4, 4)
+roofARMTexture.repeat.set(3, 1)
 roofARMTexture.wrapS = THREE.RepeatWrapping
-roofARMTexture.wrapT = THREE.RepeatWrapping
+// roofARMTexture.wrapT = THREE.RepeatWrapping
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
+roofNormalTexture.rotation = Math.PI * 1.5
+// gui.add(roofNormalTexture, 'rotation', 0, 2 * Math.PI)
+// gui.add(roofColorTexture, 'colorSpace', ['Linear', 'SRGB'])
+// gui.add(roofARMTexture, 'rotation', 0, 2 * Math.PI)
+
+// Bush Textures
+const bushAOTexture = textureLoader.load('./bush/Hedge_001_AmbientOcclusion.jpg')
+const bushRoughTexture = textureLoader.load('./bush/Hedge_001_Roughness.jpg')
+const bushColorTexture = textureLoader.load('./bush/Hedge_001_BaseColor.jpg')
+const bushNormalTexture = textureLoader.load('./bush/Hedge_001_Normal.jpg')
+const bushDisplacementTexture = textureLoader.load('./bush/Hedge_001_Height.png')
+
+bushColorTexture.colorSpace = THREE.SRGBColorSpace
+
+// Door Textures
+const doorAlphaTexture = textureLoader.load('./door/alpha.jpg')
+const doorColorTexture = textureLoader.load('./door/color.jpg')
+const doorAOTexture = textureLoader.load('./door/ambientOcclusion.jpg')
+const doorRoughTexture = textureLoader.load('./door/roughness.jpg')
+const doorMetalTexture = textureLoader.load('./door/metalness.jpg')
+const doorNormalTexture = textureLoader.load('./door/normal.jpg')
+const doorDisplacementTexture = textureLoader.load('./door/height.jpg')
 
 // Floor
 
@@ -138,8 +161,17 @@ house.add(roof)
 
 // Door
 const door = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.2, 2.2),
-    new THREE.MeshStandardMaterial({color: 0xf55f, roughness: 0.5})
+    new THREE.PlaneGeometry(2, 2),
+    new THREE.MeshStandardMaterial({
+        map: doorColorTexture,
+        aoMap: doorAOTexture,
+        roughnessMap: doorRoughTexture,
+        metalnessMap: doorMetalTexture,
+        normalMap: doorNormalTexture,
+        displacementMap: doorDisplacementTexture,
+        // displacementScale: 0.4,
+        // displacementBias: - 0.1,
+    })
 )
 door.position.y += 1
 door.position.x += 2 + 0.01
@@ -148,7 +180,15 @@ house.add(door)
 
 // Bushes
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
-const bushMaterial = new THREE.MeshStandardMaterial()
+const bushMaterial = new THREE.MeshStandardMaterial({
+        map: bushColorTexture,
+        aoMap: bushAOTexture,
+        roughnessMap: bushRoughTexture,
+        normalMap: bushNormalTexture,
+        displacementMap: bushDisplacementTexture,
+        displacementScale: 0.4,
+        displacementBias: - 0.1,
+})
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush1.scale.set(0.5, 0.5, 0.5)
