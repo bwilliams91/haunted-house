@@ -58,24 +58,24 @@ wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Roof Textures
 
-const roofARMTexture = textureLoader.load('./roof/clay_roof_tiles_03_arm_1k.jpg')
-const roofNormalTexture = textureLoader.load('./roof/clay_roof_tiles_03_nor_gl_1k.jpg')
-const roofColorTexture = textureLoader.load('./roof/clay_roof_tiles_03_diff_1k.jpg')
+const roofARMTexture = textureLoader.load('./roof/clay_roof_tiles_arm_1k.jpg')
+const roofNormalTexture = textureLoader.load('./roof/clay_roof_tiles_nor_gl_1k.jpg')
+const roofColorTexture = textureLoader.load('./roof/clay_roof_tiles_diff_1k.jpg')
 
-roofNormalTexture.repeat.set(3, 1)
+roofNormalTexture.repeat.set(1, 1)
+roofColorTexture.repeat.set(1, 1)
+roofARMTexture.repeat.set(1, 1)
+
 roofNormalTexture.wrapS = THREE.RepeatWrapping
-// roofNormalTexture.wrapT = THREE.RepeatWrapping
-
-roofColorTexture.repeat.set(3, 1)
 roofColorTexture.wrapS = THREE.RepeatWrapping
-// roofColorTexture.wrapT = THREE.RepeatWrapping
-
-roofARMTexture.repeat.set(3, 1)
 roofARMTexture.wrapS = THREE.RepeatWrapping
-// roofARMTexture.wrapT = THREE.RepeatWrapping
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
+
 roofNormalTexture.rotation = Math.PI * 1.5
+roofColorTexture.rotation = Math.PI * 1.5
+roofARMTexture.rotation = Math.PI * 1.5
+
 // gui.add(roofNormalTexture, 'rotation', 0, 2 * Math.PI)
 // gui.add(roofColorTexture, 'colorSpace', ['Linear', 'SRGB'])
 // gui.add(roofARMTexture, 'rotation', 0, 2 * Math.PI)
@@ -89,6 +89,16 @@ const bushDisplacementTexture = textureLoader.load('./bush/Hedge_001_Height.png'
 
 bushColorTexture.colorSpace = THREE.SRGBColorSpace
 
+bushAOTexture.repeat.set(2, 1)
+bushRoughTexture.repeat.set(2, 1)
+bushColorTexture.repeat.set(2, 1)
+bushNormalTexture.repeat.set(2, 1)
+
+bushAOTexture.wrapS = THREE.RepeatWrapping
+bushRoughTexture.wrapS = THREE.RepeatWrapping
+bushColorTexture.wrapS = THREE.RepeatWrapping
+bushNormalTexture.wrapS = THREE.RepeatWrapping
+
 // Door Textures
 const doorAlphaTexture = textureLoader.load('./door/alpha.jpg')
 const doorColorTexture = textureLoader.load('./door/color.jpg')
@@ -97,6 +107,20 @@ const doorRoughTexture = textureLoader.load('./door/roughness.jpg')
 const doorMetalTexture = textureLoader.load('./door/metalness.jpg')
 const doorNormalTexture = textureLoader.load('./door/normal.jpg')
 const doorDisplacementTexture = textureLoader.load('./door/height.jpg')
+
+doorColorTexture.colorSpace = THREE.SRGBColorSpace
+
+// Grave Textures
+const graveARMTexture = textureLoader.load('./grave/plastered_stone_wall_arm_1k.jpg')
+const graveColorTexture = textureLoader.load('./grave/plastered_stone_wall_diff_1k.jpg')
+const graveNormalTexture = textureLoader.load('./grave/plastered_stone_wall_norm_1k.jpg')
+
+graveARMTexture.repeat.set(0.3, 0.4)
+graveColorTexture.repeat.set(0.3, 0.4)
+graveNormalTexture.repeat.set(0.3, 0.4)
+
+
+graveColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Floor
 
@@ -138,6 +162,7 @@ const walls = new THREE.Mesh(
         metalnessMap: wallARMTexture,
         normalMap: wallNormalTexture,
         map: wallColorTexture,
+        color: '#b69b96'
     })
 )
 walls.position.y += 2.5 / 2
@@ -161,19 +186,21 @@ house.add(roof)
 
 // Door
 const door = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 2),
+    new THREE.PlaneGeometry(2, 2, 100, 100),
     new THREE.MeshStandardMaterial({
         map: doorColorTexture,
         aoMap: doorAOTexture,
         roughnessMap: doorRoughTexture,
         metalnessMap: doorMetalTexture,
         normalMap: doorNormalTexture,
+        alphaMap: doorAlphaTexture,
         displacementMap: doorDisplacementTexture,
-        // displacementScale: 0.4,
-        // displacementBias: - 0.1,
+        transparent: true,
+        displacementScale: 0.15,
+        displacementBias: - 0.04,
     })
 )
-door.position.y += 1
+door.position.y += .9
 door.position.x += 2 + 0.01
 door.rotation.y = Math.PI * 0.5
 house.add(door)
@@ -188,46 +215,90 @@ const bushMaterial = new THREE.MeshStandardMaterial({
         displacementMap: bushDisplacementTexture,
         displacementScale: 0.4,
         displacementBias: - 0.1,
+        // color: '#5AAF1A'
 })
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush1.scale.set(0.5, 0.5, 0.5)
 bush1.position.set(.8, .2, 2.2)
-
+bush1.rotation.x = - 0.75
 
 const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush2.scale.set(0.5, 0.5, 0.5)
 bush2.position.set(-.8, 0.2, 2.2)
-
+bush2.rotation.x = - 0.75
 
 const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush3.scale.set(0.25, 0.25, 0.25)
 bush3.position.set(0, 0.1, 2.2)
-
+bush3.rotation.x = - 0.75
 
 const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush4.scale.set(0.5, 0.5, 0.5)
 bush4.position.set(.8, 0.2, -2.4)
-
+bush4.rotation.x = 0.33
+bush4.rotation.y = -2
 
 const bush5 = new THREE.Mesh(bushGeometry, bushMaterial)
-bush5.scale.set(0.5, 0.5, 0.5)
+bush5.scale.set(0.6, 0.6, 0.6)
 bush5.position.set(-2.25, 0.2, -1.2)
+bush5.rotation.x =  -2
+bush5.rotation.y = -0.75
+bush5.rotation.z = 1.41
 
 const bush6 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush6.scale.set(0.5, 0.5, 0.5)
 bush6.position.set(-2.25, 0.2, 1.2)
-
+bush6.rotation.x = - 2
+bush6.rotation.y = -0.75
+bush6.rotation.z = 1.41
 
 const bush7 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush7.scale.set(0.25, 0.25, 0.25)
 bush7.position.set(0, 0.1, -2.2)
+bush7.rotation.x = 0.43
+bush7.rotation.z = -0.61
 
-house.add(bush1, bush2, bush3, bush4, bush5, bush6, bush7)
+const bush8 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush8.scale.set(0.22, 0.22, 0.22)
+bush8.position.set(2.19, 0.11, 1.7)
+bush8.rotation.x = - 0.75
+
+const bush9 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush9.scale.set(0.48, 0.48, 0.48)
+bush9.position.set(2.41, 0.1, 1.02)
+bush9.rotation.x = 1.46 
+bush9.rotation.y = -0.75
+bush9.rotation.z = 1.51
+
+
+const bush10 = new THREE.Mesh(bushGeometry, bushMaterial)
+bush10.scale.set(0.55, 0.55, 0.55)
+bush10.position.set(2.34, 0.1, - 1.08)
+bush10.rotation.x = 1.46 
+bush10.rotation.y = -0.46
+bush10.rotation.z = 1.51
+
+house.add(bush1, bush2, bush3, bush4, bush5, bush6, bush7, bush8, bush9, bush10)
+
+// GUI for bushes
+// gui.add(bush7.position, 'x', -3, 3, 0.01)
+// gui.add(bush7.position, 'y', -1, 1, 0.01)
+// gui.add(bush7.position, 'z', -4, 5, 0.01)
+// gui.add(bush4.rotation, 'x', -2, 2, 0.01)
+// gui.add(bush4.rotation, 'y', -2, 2, 0.01)
+// gui.add(bush4.rotation, 'z', -2, 2, 0.01)
+
 
 // GRAVES
 const gravesGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
-const gravesMaterial = new THREE.MeshStandardMaterial()
+const gravesMaterial = new THREE.MeshStandardMaterial({
+    map: graveColorTexture,
+    aoMap: graveARMTexture,
+    roughnessMap: graveARMTexture,
+    metalnessMap: graveARMTexture,
+    normalMap: graveNormalTexture,
+})
 
 const graves = new THREE.Group()
 scene.add(graves)
@@ -252,23 +323,33 @@ for(let i = 0; i < 30; i++)
     }
 
 
-// GUI for bushes
-// gui.add(bush5.position, 'x', -3, 3, 0.01)
-// gui.add(bush5.position, 'y', -1, 1, 0.01)
-// gui.add(bush5.position, 'z', -4, 5, 0.01)
-
  
 /**
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight('#86cdff', 0.25)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
+const directionalLight = new THREE.DirectionalLight('#86cdff', 1)
 directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
+
+// Point light
+ const pointLight = new THREE.PointLight('#ff7d46', 4)
+pointLight.position.set(2.34, 2.2, -0.02)
+scene.add(pointLight)
+
+// gui.add(pointLight.position, 'x', -3, 3, 0.01)
+// gui.add(pointLight.position, 'y', -3, 3, 0.01)
+// gui.add(pointLight.position, 'z', -3, 3, 0.01)
+
+// Ghosts
+const ghost1 = new THREE.PointLight('#8800ff', 6)
+const ghost2 = new THREE.PointLight('#882344', 6)
+const ghost3 = new THREE.PointLight('#880', 6)
+scene.add(ghost1, ghost2, ghost3)
 
 /**
  * Sizes
@@ -303,6 +384,8 @@ camera.position.y = 2
 camera.position.z = 5
 scene.add(camera)
 
+gui.add(camera.position, 'x', -3, 3, 0.01)
+
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
@@ -326,6 +409,12 @@ const tick = () =>
     // Timer
     timer.update()
     const elapsedTime = timer.getElapsed()
+
+    // Ghost Animation
+    const ghost1Angle = elapsedTime
+    ghost1.position.x = Math.cos(ghost1Angle) * 4
+    ghost1.position.z = Math.sin(ghost1Angle) * 4
+
 
     // Update controls
     controls.update()
